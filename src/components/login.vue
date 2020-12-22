@@ -7,7 +7,12 @@
 
       <!-- //登陆表单 -->
       <!-- 用户 -->
-      <el-form class="login_form" :model="loginForm" :rules="rules">
+      <el-form
+        class="login_form"
+        :model="loginForm"
+        :rules="rules"
+        ref="loginFormRef"
+      >
         <el-form-item prop="username">
           <el-input
             prefix-icon="el-icon-user-solid"
@@ -23,8 +28,8 @@
           ></el-input>
         </el-form-item>
         <el-form-item class="btns">
-          <el-button type="primary">登陆</el-button>
-          <el-button type="info">重置</el-button>
+          <el-button type="primary" @click="login">登陆</el-button>
+          <el-button type="info" @click="resetLoginForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -37,8 +42,8 @@ export default {
     return {
       //表单的数据绑定对象
       loginForm: {
-        username: "",
-        password: "",
+        username: "admin",
+        password: "123456",
       },
       rules: {
         username: [
@@ -47,6 +52,24 @@ export default {
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
       },
     };
+  },
+  methods: {
+    // 重置输入内容
+    resetLoginForm() {
+      this.$refs.loginFormRef.resetFields();
+    },
+    // 表单验证成功以后，发送网络请求
+    login() {
+      this.$refs.loginFormRef.validate(async (valid) => {
+        if (!valid) return;
+        const { data: res } = await this.$http.post("login", this.loginForm); //发送post请求，参数为this.loginForm
+        if (res.meta.status !== 200) return this.$message.error("登陆失败!"); //$message是element-ui默认提供的，可以直接使用
+        this.$message.success("登陆成功!");
+        // 将服务器发过来的token保存到sessionStorage中
+        window.sessionStorage.setItem("token", res.data.token);
+        this.$router.push("/home");
+      });
+    },
   },
 };
 </script>
