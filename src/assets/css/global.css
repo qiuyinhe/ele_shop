@@ -2,6 +2,7 @@ html,body,#app{
   height: 100%;
   margin: 0;
   padding: 0;
+  min-width: 980px;
 }
 .el-breadcrumb{
   margin: 5px 5px 15px 5px;

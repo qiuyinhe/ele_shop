@@ -64,7 +64,7 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
       this.$message.success(res.meta.msg);
       this.menulist = res.data;
-      console.log(this.menulist);
+      // console.log(this.menulist);
     },
     toggleAside() {
       this.isCollapse = !this.isCollapse;
